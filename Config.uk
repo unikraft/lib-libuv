@@ -1,0 +1,6 @@
+menuconfig LIBLIBUV
+	   bool "libuv - asyncronous I/O library"
+	   default y
+	   select HAVE_LIBC
+
+

@@ -1,0 +1,102 @@
+#  liblibuv Makefile.uc
+#
+#  Authors: Felipe Huici <felipe.huici@neclab.eu>
+#
+#
+#  Copyright (c) 2017, NEC Europe Ltd., NEC Corporation. All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#  3. Neither the name of the copyright holder nor the names of its
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+#  THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY.
+#
+
+################################################################################
+# Library registration
+################################################################################
+$(eval $(call addlib_s,liblibuv,$(CONFIG_LIBLIBUV)))
+
+################################################################################
+# Sources
+################################################################################
+LIBLIBUV_VERSION=v1.x
+LIBLIBUV_URL=https://github.com/libuv/libuv/archive/$(LIBLIBUV_VERSION).zip
+LIBLIBUV_DIR=libuv-1.x
+
+LIBLIBUV_PATCHDIR=$(LIBLIBUV_BASE)/patches
+$(eval $(call fetch,liblibuv,$(LIBLIBUV_URL),$(LIBLIBUV_VERSION).zip))
+$(eval $(call patch,liblibuv,$(LIBLIBUV_PATCHDIR),$(LIBLIBUV_DIR)))
+
+################################################################################
+# Helpers
+################################################################################
+LIBLIBUV=$(LIBLIBUV_ORIGIN)/$(LIBLIBUV_DIR)
+
+################################################################################
+# Library includes
+################################################################################
+CINCLUDES-$(CONFIG_LIBLIBUV) += -I$(LIBLIBUV_BASE)/include \
+			        -I$(LIBLIBUV)/include      \
+			        -I$(LIBLIBUV)/src          \
+			        -I$(LIBLIBUV)/src/unix				
+
+################################################################################
+# Global flags
+################################################################################
+LIBLIBUV_CFLAGS-y += -D_POSIX_SOURCE -D_GNU_SOURCE -D__GNU__
+
+################################################################################
+# Sources
+################################################################################
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/fs-poll.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/inet.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/threadpool.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/timer.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/uv-data-getter-setters.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/uv-common.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/version.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/async.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/core.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/dl.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/fs.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/getaddrinfo.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/getnameinfo.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/loop-watcher.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/loop.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/pipe.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/poll.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/process.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/signal.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/stream.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/tcp.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/thread.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/tty.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/udp.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/procfs-exepath.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/sysinfo-loadavg.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/sysinfo-memory.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/posix-hrtime.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/posix-poll.c
+LIBLIBUV_SRCS-y += $(LIBLIBUV)/src/unix/no-fsevents.c
