@@ -1,0 +1,120 @@
+#  libuv11 config file
+#
+#  Authors: Vlad-Andrei Badoiu <vlad_andrei.badoiu@stud.acs.upb.ro>
+#
+#  Copyright (c) 2020, University Politehnica of Bucharest. All rights reserved.
+#
+#  Redistribution and use in source and binary forms, with or without
+#  modification, are permitted provided that the following conditions
+#  are met:
+#
+#  1. Redistributions of source code must retain the above copyright
+#     notice, this list of conditions and the following disclaimer.
+#  2. Redistributions in binary form must reproduce the above copyright
+#     notice, this list of conditions and the following disclaimer in the
+#     documentation and/or other materials provided with the distribution.
+#  3. Neither the name of the copyright holder nor the names of its
+#     contributors may be used to endorse or promote products derived from
+#     this software without specific prior written permission.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+#  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+#  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+#  ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+#  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+#  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+#  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+#  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+#  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+#  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+#  POSSIBILITY OF SUCH DAMAGE.
+#
+#  THIS HEADER MAY NOT BE EXTRACTED OR MODIFIED IN ANY WAY.
+
+################################################################################
+# Library registration
+################################################################################
+$(eval $(call addlib_s,libuv,$(CONFIG_LIBUV)))
+
+################################################################################
+# Sources
+################################################################################
+LIBUV_VERSION=1.35.0
+LIBUV_URL=https://github.com/libuv/libuv/archive/v$(LIBUV_VERSION).tar.gz
+LIBUV_PATCHDIR=$(LIBUV_BASE)/patches
+$(eval $(call fetch,libuv,$(LIBUV_URL)))
+$(eval $(call patch,libuv,$(LIBUV_PATCHDIR),libuv-$(LIBUV_VERSION)))
+
+################################################################################
+# Helpers
+################################################################################
+LIBUV_SUBDIR=libuv-$(LIBUV_VERSION)
+LIBUV_SRC=$(LIBUV_ORIGIN)/$(LIBUV_SUBDIR)
+
+################################################################################
+# Library includes
+################################################################################
+CINCLUDES-$(CONFIG_LIBUV) += -I$(LIBUV_SRC)/include
+CINCLUDES-$(CONFIG_LIBUV) += -I$(LIBUV_SRC)/src
+CXXINCLUDES-$(CONFIG_LIBUV) += -I$(LIBUV_SRC)/include
+CXXINCLUDES-$(CONFIG_LIBUV) += -I$(LIBUV_SRC)/src
+
+################################################################################
+# Global flags
+################################################################################
+# Suppress some warnings to make the build process look neater
+SUPPRESS_FLAGS += -Wno-unused-parameter -Wno-unused-variable -Wno-nonnull	\
+-Wno-unused-but-set-variable -Wno-unused-label -Wno-char-subscripts		\
+-Wno-unused-function -Wno-missing-field-initializers -Wno-uninitialized		\
+-Wno-array-bounds -Wno-maybe-uninitialized -Wno-pointer-sign -Wno-unused-value	\
+-Wno-unused-macros -Wno-parentheses -Wno-implicit-function-declaration		\
+-Wno-missing-braces -Wno-endif-labels -Wno-unused-but-set-variable		\
+-Wno-implicit-function-declaration -Wno-type-limits -Wno-sign-compare
+
+LIBUV_CFLAGS-y    +=  $(SUPPRESS_FLAGS) -D_POSIX_READER_WRITER_LOCKS -D_POSIX_THREADS -U__linux__ -D__GNU__
+LIBUV_CXXFLAGS-y    +=  $(SUPPRESS_FLAGS) -D_POSIX_READER_WRITER_LOCKS -D_POSIX_THREADS -U__linux__ -D__GNU__
+
+################################################################################
+# Library sources
+################################################################################
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/sysinfo-memory.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/no-fsevents.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/getnameinfo.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/procfs-exepath.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/random-getentropy.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/sysinfo-loadavg.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/random-devurandom.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/dl.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/random-getrandom.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/core.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/posix-hrtime.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/no-proctitle.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/pipe.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/async.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/pthread-fixes.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/getaddrinfo.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/udp.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/stream.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/fsevents.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/tcp.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/loop-watcher.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/posix-poll.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/random-sysctl-linux.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/loop.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/fs.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/poll.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/process.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/tty.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/linux-syscalls.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/signal.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/unix/thread.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/uv-data-getter-setters.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/inet.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/threadpool.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/random.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/uv-common.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/idna.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/fs-poll.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/strscpy.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/timer.c
+LIBUV_SRCS-y += $(LIBUV_SRC)/src/version.c
