@@ -1,0 +1,11 @@
+menuconfig LIBUV
+	bool "libuv - asynchronous I/O"
+	select LIBLWIP
+	select LWIP_IGMP
+	select LWIP_IPV6
+	select LWIP_SOCKET
+	select LIBNEWLIBC
+	select LIBPOSIX_SYSINFO
+	select LIBPOSIX_LIBDL
+	select LIBPTHREAD_EMBEDDED
+	default n
